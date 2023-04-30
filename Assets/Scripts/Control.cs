@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class Control : MonoBehaviour
 {
+    public Vector3 FocalPoint;
     public Vector2 Offset;
     Vector2 _mouse;
     Vector3 _lookPos;
@@ -22,10 +23,14 @@ public class Control : MonoBehaviour
             );
         else
         {
-            _lookPos = State.Player.transform.position;
-
-            transform.LookAt(_lookPos);
-
+            transform.LookAt(Vector3.Lerp(State.PlayersMidpoint, FocalPoint, 0.75f));
         }
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawCube(FocalPoint, Vector3.one);
+    }
+#endif
 }

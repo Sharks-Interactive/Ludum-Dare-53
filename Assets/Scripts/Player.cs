@@ -2,15 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public float Acceleration;
+    public int ID;
+
+    public SItem HeldItem
+    {
+        get => _heldItem;
+        set { 
+            _heldItem = value;
+            _itemDisplay.fillAmount = value == null ? 0 : 1;
+            if (value != null)
+                _itemDisplay.sprite = value.Icon;
+        }
+    }
+
     private Rigidbody rb;
+    private SItem _heldItem;
+
+    private Image _itemDisplay;
 
     private void Awake()
     {
-        State.Player = gameObject;
+        _itemDisplay = transform.Find("Canvas").GetComponentInChildren<Image>();
+        State.Players[ID] = gameObject;
     }
 
     private void Start()
@@ -21,15 +39,43 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (ID > Input.ConnectedPlayers - 1) return;
         rb.AddForce(
             new Vector3(
-                (Keyboard.current.dKey.ReadValue() - Keyboard.current.aKey.ReadValue()) * Acceleration,
+                Input.ReadAxis(ID, 0) * Acceleration,
                 0,
-                (Keyboard.current.wKey.ReadValue() - Keyboard.current.sKey.ReadValue()) * Acceleration
+                (Input.ReadAxis(ID, 1) * Acceleration) + (State.TrainSpeed / 4)
             ), 
             ForceMode.Impulse
         );
 
-        if (Keyboard.current.eKey.wasPressedThisFrame) State.OnTrain = !State.OnTrain;
+        if (transform.position.z < -10 || transform.position.y < -2)
+        {
+            transform.position = new Vector3(6 * (ID == 0 ? -1 : 1), 2, 0);
+            Input.Feedback(ID, new Vector2(0, 1), 500);
+        }
+    }
+
+    void Update()
+    {
+        if (ID > Input.ConnectedPlayers - 1) return;
+        //if (Input.GetActionInput(ID).wasPressedThisFrame) State.OnTrain = !State.OnTrain;
+    }
+
+    public void AddResources(SItem item)
+    {
+        Input.Feedback(ID, new Vector2(1, 0), 250);
+        HeldItem = item;
+    }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        collision.BroadcastMessage("UpdateHarvestState", true, SendMessageOptions.DontRequireReceiver);
+        collision.BroadcastMessage("UpdateReceiver", this, SendMessageOptions.DontRequireReceiver);
+    }
+
+    private void OnTriggerExit(Collider collision)
+    {
+        collision.BroadcastMessage("UpdateHarvestState", false, SendMessageOptions.DontRequireReceiver);
     }
 }
