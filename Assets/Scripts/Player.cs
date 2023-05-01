@@ -44,7 +44,7 @@ public class Player : MonoBehaviour
             new Vector3(
                 Input.ReadAxis(ID, 0) * Acceleration,
                 0,
-                (Input.ReadAxis(ID, 1) * Acceleration) + (State.TrainSpeed / 4)
+                (Input.ReadAxis(ID, 1) * Acceleration) + (Mathf.Abs(transform.position.x) < 4 && transform.position.z < 2 ? 0 : (State.TrainSpeed / 4))
             ), 
             ForceMode.Impulse
         );

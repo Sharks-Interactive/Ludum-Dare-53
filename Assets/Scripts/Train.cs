@@ -44,21 +44,21 @@ public class Train : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        cv.alpha += 0.1f * Time.deltaTime * (_showBar ? 1 : -1);
+        cv.alpha += 0.8f * Time.deltaTime * (_showBar ? 1 : -1);
         Fuel -= FuelDrain * Time.deltaTime;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         Player _collision = other.GetComponent<Player>();
-        if (_collision != null)
+        if (_collision == null) return;
+        if (_collision.HeldItem == null) return;
+
+        if (_collision.HeldItem.Type == 0)
         {
-            if (_collision.HeldItem.Type == 0)
-            {
-                Fuel += _collision.HeldItem.Value;
-                _collision.HeldItem = null;
-                Input.Feedback(_collision.ID, new Vector2(0.1f, 0.1f), 100);
-            }
+            Fuel += _collision.HeldItem.Value;
+            _collision.HeldItem = null;
+            Input.Feedback(_collision.ID, new Vector2(0.1f, 0.1f), 100);
         }
     }
 }

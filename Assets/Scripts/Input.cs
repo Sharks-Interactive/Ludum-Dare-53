@@ -13,6 +13,25 @@ public static class Input
 
     public static float ReadAxis(int PlayerID, int Axis)
     {
+#if UNITY_EDITOR
+        if (PlayerID == 0)
+            return
+                Axis == 0 ?
+                    Keyboard.current.dKey.ReadValue() - Keyboard.current.aKey.ReadValue()
+                    + Gamepad.all[PlayerID].leftStick.ReadValue().x
+                :
+                    Keyboard.current.wKey.ReadValue() - Keyboard.current.sKey.ReadValue()
+                    + Gamepad.all[PlayerID].leftStick.ReadValue().y;
+        else
+            return
+                Axis == 0 ?
+                    Keyboard.current.rightArrowKey.ReadValue() - Keyboard.current.leftArrowKey.ReadValue()
+                    + Gamepad.all[PlayerID].leftStick.ReadValue().x
+                :
+                    Keyboard.current.upArrowKey.ReadValue() - Keyboard.current.downArrowKey.ReadValue()
+                    + Gamepad.all[PlayerID].leftStick.ReadValue().y;
+#endif
+
         return Axis == 0 ?
             Gamepad.all.Count != 0 ? Gamepad.all[PlayerID].leftStick.ReadValue().x
             : Keyboard.current.dKey.ReadValue() - Keyboard.current.aKey.ReadValue()
@@ -22,7 +41,12 @@ public static class Input
     }
 
     public static UnityEngine.InputSystem.Controls.ButtonControl GetActionInput(int PlayerId) =>
-        Gamepad.all.Count != 0 ? Gamepad.all[PlayerId].aButton : Keyboard.current.eKey;
+#if UNITY_EDITOR
+        false
+#else
+        Gamepad.all.Count != 0 
+#endif
+            ? Gamepad.all[PlayerId].aButton : Keyboard.current.eKey;
     
     public static async void Feedback(int PlayerId, Vector2 Strength, int Time)
     {

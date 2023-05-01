@@ -25,7 +25,7 @@ public class Fuel : MonoBehaviour
         _harvestProgress = Mathf.Clamp01(_harvestProgress);
 
         transform.localScale = Vector3.Lerp(Vector3.zero, _startSize, _harvestProgress);
-        if (_harvestProgress < 0.1f)
+        if (_harvestProgress < 0.35f)
         {
             _receiver.AddResources(Resource);
             gameObject.SetActive(false);
