@@ -15,4 +15,4 @@ MonoBehaviour:
   Icon: {fileID: 21300000, guid: a19391d0a69f6c74ba39057b332a1707, type: 3}
   Name: Computer
   Value: 8
-  Type: 0
+  Type: 1
