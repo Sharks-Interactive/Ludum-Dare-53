@@ -19,18 +19,19 @@ public class Deposit : MonoBehaviour
         }
     }
     private SItem _heldItem;
+    private Player _player;
 
     public GameObject[] Item;
 
-    private void OnTriggerStay(Collider other)
+    private void Update()
     {
-        Player _player = other.GetComponent<Player>();
         if (_player != null)
         {
-            if (Input.GetActionInput(_player.ID).isPressed)
+            if (Input.GetActionInput(_player.ID).wasPressedThisFrame)
             {
                 if (_player.HeldItem != null && HeldItem == null)
                 {
+                    if (_player.HeldItem.Type == 0) return;
                     HeldItem = _player.HeldItem;
                     _player.HeldItem = null;
 
@@ -47,5 +48,15 @@ public class Deposit : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        _player = other.GetComponent<Player>();
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        _player = null;
     }
 }

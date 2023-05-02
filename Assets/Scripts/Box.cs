@@ -5,10 +5,10 @@ using UnityEngine;
 public class Box : MonoBehaviour
 {
     public SItem repo;
+    private Player _player;
 
-    private void OnTriggerStay(Collider other)
+    private void Update()
     {
-        Player _player = other.GetComponent<Player>();
         if (_player != null)
         {
             if (Input.GetActionInput(_player.ID).wasPressedThisFrame)
@@ -17,5 +17,15 @@ public class Box : MonoBehaviour
                 Input.Feedback(_player.ID, new Vector2(1, 0), 250);
             }
         }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        _player = other.GetComponent<Player>();
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        _player = null;
     }
 }

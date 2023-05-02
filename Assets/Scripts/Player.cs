@@ -39,12 +39,12 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (ID > Input.ConnectedPlayers - 1) return;
+        //if (ID > Input.ConnectedPlayers - 1) return;
         rb.AddForce(
             new Vector3(
                 Input.ReadAxis(ID, 0) * Acceleration,
                 0,
-                (Input.ReadAxis(ID, 1) * Acceleration) + (Mathf.Abs(transform.position.x) < 4 && transform.position.z < 2 ? 0 : (State.TrainSpeed / 4))
+                (Input.ReadAxis(ID, 1) * Acceleration) + (Mathf.Abs(transform.position.x) < 4 && transform.position.z < 2.5 ? 0 : (State.TrainSpeed / 4))
             ), 
             ForceMode.Impulse
         );
@@ -52,6 +52,7 @@ public class Player : MonoBehaviour
         if (transform.position.z < -10 || transform.position.y < -2)
         {
             transform.position = new Vector3(6 * (ID == 0 ? -1 : 1), 2, 0);
+            HeldItem = null;
             Input.Feedback(ID, new Vector2(0, 1), 500);
         }
     }

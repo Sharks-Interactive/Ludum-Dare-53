@@ -18,18 +18,20 @@ public static class Input
             return
                 Axis == 0 ?
                     Keyboard.current.dKey.ReadValue() - Keyboard.current.aKey.ReadValue()
-                    + Gamepad.all[PlayerID].leftStick.ReadValue().x
+                    //+ Gamepad.all[PlayerID].leftStick.ReadValue().x
                 :
                     Keyboard.current.wKey.ReadValue() - Keyboard.current.sKey.ReadValue()
-                    + Gamepad.all[PlayerID].leftStick.ReadValue().y;
+                    //+ Gamepad.all[PlayerID].leftStick.ReadValue().y
+                    ;
         else
             return
                 Axis == 0 ?
                     Keyboard.current.rightArrowKey.ReadValue() - Keyboard.current.leftArrowKey.ReadValue()
-                    + Gamepad.all[PlayerID].leftStick.ReadValue().x
+                    //+ Gamepad.all[PlayerID].leftStick.ReadValue().x
                 :
                     Keyboard.current.upArrowKey.ReadValue() - Keyboard.current.downArrowKey.ReadValue()
-                    + Gamepad.all[PlayerID].leftStick.ReadValue().y;
+                    //+ Gamepad.all[PlayerID].leftStick.ReadValue().y
+                    ;
 #endif
 
         return Axis == 0 ?

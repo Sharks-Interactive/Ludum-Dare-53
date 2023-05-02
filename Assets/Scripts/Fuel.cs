@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Fuel : MonoBehaviour
 {
@@ -21,6 +22,10 @@ public class Fuel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_receiver != null)
+            _harvesting = Input.GetActionInput(_receiver.ID).isPressed;
+        else _harvesting = false;
+
         _harvestProgress += HarvestSpeed * Time.deltaTime * (_harvesting ? -2.5f : 1);
         _harvestProgress = Mathf.Clamp01(_harvestProgress);
 
@@ -32,6 +37,13 @@ public class Fuel : MonoBehaviour
         }
     }
 
-    public void UpdateHarvestState(bool state) => _harvesting = state;
-    public void UpdateReceiver(Player receiver) => _receiver = receiver;
+    private void OnTriggerStay(Collider other)
+    {
+        _receiver = other.GetComponent<Player>();
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        _receiver = null;
+    }
 }

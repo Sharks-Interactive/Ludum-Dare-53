@@ -46,6 +46,8 @@ public class Train : MonoBehaviour
     {
         cv.alpha += 0.8f * Time.deltaTime * (_showBar ? 1 : -1);
         Fuel -= FuelDrain * Time.deltaTime;
+
+        if (Fuel < 0) State.EndGame("the train ran out of steam.");
     }
 
     private void OnTriggerEnter(Collider other)
